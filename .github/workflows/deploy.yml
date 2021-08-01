@@ -31,8 +31,9 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    steps:
       -
-        name: Set up QEMU
+        name: Executing remote command
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
