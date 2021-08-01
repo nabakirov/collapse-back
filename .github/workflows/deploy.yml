@@ -6,7 +6,7 @@ on:
       - 'development'
 
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
     steps:
       -
@@ -28,3 +28,15 @@ jobs:
         with:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/collapse:development
+
+  deploy:
+    runs-on: ubuntu-latest
+      -
+        name: Set up QEMU
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PORT: ${{ secrets.PORT }}
+          KEY: ${{ secrets.SSHKEY }}
+          script: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/collapse:development && docker run -d -e SECRET_KEY=asdf DEBUG=1 -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/collapse:development
